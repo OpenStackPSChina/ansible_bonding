@@ -1,0 +1,8 @@
+---
+overcloud_raw_nic_mac: "ansible_eth0.macaddress"
+mgmt_net_master_nic: "eth0"
+mgmt_net_second_nic: "eth1"
+ext_net_master_nic: "eth2"
+ext_net_second_nic: "eth3"
+svc_net_master_nic: "eth4"
+svc_net_second_nic: "eth5"

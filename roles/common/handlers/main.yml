@@ -1,0 +1,4 @@
+---
+# file: roles/common/handlers/main.yml
+- name: reboot server
+  command: /sbin/reboot

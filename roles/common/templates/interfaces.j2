@@ -1,0 +1,75 @@
+# interfaces(5) file used by ifup(8) and ifdown(8)
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+auto lo
+iface lo inet loopback
+
+auto {{ mgmt_net_master_nic }}
+iface {{ mgmt_net_master_nic }} inet manual
+      up ip link set $IFACE up
+      down ip link set $IFACE down
+
+auto {{ mgmt_net_second_nic }}
+iface {{ mgmt_net_second_nic }} inet manual
+      up ip link set $IFACE up
+      down ip link set $IFACE down
+
+auto {{ ext_net_master_nic }}
+iface {{ ext_net_master_nic }} inet manual
+      up ip link set $IFACE up
+      down ip link set $IFACE down
+
+auto {{ ext_net_second_nic }}
+iface {{ ext_net_second_nic }} inet manual
+      up ip link set $IFACE up
+      down ip link set $IFACE down
+
+auto br-mgmt
+allow-ovs br-mgmt
+iface br-mgmt inet dhcp
+      ovs_type OVSBridge
+      ovs_ports bond-mgmt
+      ovs_extra set bridge br-mgmt other-config:hwaddr={{ overcloud_raw_nic_mac }}
+
+allow-br-mgmt bond-mgmt
+iface bond-mgmt inet manual
+      ovs_bridge br-mgmt
+      ovs_type OVSBond
+      ovs_bonds {{ mgmt_net_master_nic }} {{ mgmt_net_second_nic }}
+
+auto br-ex           
+allow-ovs br-ex
+iface br-ex inet dhcp
+      ovs_type OVSBridge
+      ovs_ports bond-ex
+
+allow-br-ex bond-ex
+iface bond-ex inet manual
+      ovs_bridge br-ex
+      ovs_type OVSBond
+      ovs_bonds {{ ext_net_master_nic }} {{ ext_net_second_nic }}
+
+{% if svc_net_master_nic is defined and svc_net_second_nic is defined %}
+auto {{ svc_net_master_nic }}
+iface {{ svc_net_master_nic }} inet manual
+      up ip link set $IFACE up
+      down ip link set $IFACE down
+
+auto {{ svc_net_second_nic }}
+iface {{ svc_net_second_nic }} inet manual
+      up ip link set $IFACE up
+      down ip link set $IFACE down
+
+auto br-svc           
+allow-ovs br-svc
+iface br-svc inet dhcp
+      ovs_type OVSBridge
+      ovs_ports bond-svc
+
+allow-br-svc bond-svc
+iface bond-svc inet manual
+      ovs_bridge br-svc
+      ovs_type OVSBond
+      ovs_bonds {{ svc_net_master_nic }} {{ svc_net_second_nic }}
+{% endif %}

@@ -1,0 +1,6 @@
+---
+# file: roles/common/tasks/main.yml
+- name: generate new interfaces
+  template: src=interfaces.j2 dest=/etc/network/interfaces
+  notify:
+      - reboot server

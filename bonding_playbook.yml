@@ -1,0 +1,4 @@
+---
+# file: bonding_playbook.yml
+- include: overcloud_controller.yml
+- include: overcloud_compute.yml

@@ -1,0 +1,5 @@
+---
+# file: overcloud_compute.yml
+- hosts: overcloud_compute
+  roles:
+    - common
